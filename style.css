@@ -4,6 +4,13 @@
     box-sizing: border-box;
     font-family: Arial, sans-serif;
 }
+
+/* éviter les débordements horizontaux */
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 .accueil {
     position: absolute;
     top: 10px;
@@ -35,7 +42,8 @@ body {
     margin: 15px 0;
     border-radius: 14px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    transition: 0.2s;
+    transition: all 0.25s ease;
+    width: 100%;
 }
 
 .card:hover {
@@ -59,7 +67,7 @@ button {
     border-radius: 10px;
     cursor: pointer;
     font-weight: bold;
-    transition: 0.2s;
+    transition: all 0.25s ease;
 }
 
 button:hover {
@@ -75,10 +83,13 @@ input {
     border-radius: 10px;
     border: 1px solid #d1d5db;
     outline: none;
+    transition: all 0.2s ease;
+    background: #fff;
 }
 
 input:focus {
     border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 /* NAVBAR */
@@ -90,6 +101,8 @@ input:focus {
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     position: sticky;
     top: 0;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 /* LINKS */
@@ -111,16 +124,31 @@ a:hover {
     margin: 5px 0;
     border-radius: 10px;
     border: 1px solid #e5e7eb;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 /* RESPONSIVE */
 @media (max-width: 600px) {
+
     .container {
-        width: 95%;
+        width: 100%;
+        padding: 20px 15px;
     }
 
     button {
         width: 100%;
         margin-top: 10px;
+    }
+
+    .task {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .accueil {
+        top: 10px;
+        right: 10px;
+        padding: 8px 10px;
     }
 }
