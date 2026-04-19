@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo-Valk - Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <a href="index.html" class="accueil"><strong>ACCUEIL</strong></a>
+<div class="container">
+
+    <h1>Créer un compte 🚀</h1>
+
+    <div class="card">
+
+        <input type="text" id="name" placeholder="Nom">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Mot de passe">
+
+        <button onclick="register()">S'inscrire</button>
+
+        <p style="margin-top:10px;">
+            Déjà un compte ? <a href="login.html">Connexion</a>
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+
+async function register() {
+    try {
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const res = await fetch("https://todo-valk-api.onrender.com/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await res.json();
+
+        console.log("REGISTER RESPONSE:", data);
+
+        if (data.message === "Compte créé avec succès") {
+            alert("Compte créé 🔥 connecte-toi maintenant");
+            window.location.href = "login.html";
+        } else {
+            alert(data.message || "Erreur register");
+        }
+
+    } catch (err) {
+        console.log("REGISTER ERROR:", err);
+        alert("Erreur serveur");
+    }
+}
+
+</script>
+
+</body>
+</html>

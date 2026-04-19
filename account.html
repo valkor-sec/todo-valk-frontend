@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo-Valk - Compte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="navbar">
+    <div><b>Compte utilisateur</b></div>
+    <div>
+        <a href="dashboard.html">Retour</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>Mon compte 👤</h2>
+
+        <input type="password" id="newPassword" placeholder="Nouveau mot de passe">
+        <button onclick="changePassword()">Changer mot de passe</button>
+
+        <hr style="margin:20px 0;">
+
+        <button style="background:red;" onclick="logout()">Se déconnecter</button>
+
+    </div>
+
+</div>
+
+<script>
+
+const token = localStorage.getItem("token");
+
+// sécurité : si pas connecté
+if (!token) {
+    window.location.href = "login.html";
+}
+
+// CHANGER MOT DE PASSE
+async function changePassword() {
+    try {
+        const newPassword = document.getElementById("newPassword").value;
+
+        if (!newPassword) {
+            alert("Mot de passe vide");
+            return;
+        }
+
+        const res = await fetch("https://todo-valk-api.onrender.com/api/auth/change-password", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({ password: newPassword })
+        });
+
+        const data = await res.json();
+
+        console.log("PASSWORD CHANGE:", data);
+
+        alert(data.message || "Mot de passe changé");
+
+        document.getElementById("newPassword").value = "";
+
+    } catch (err) {
+        console.log("ERROR:", err);
+        alert("Erreur serveur");
+    }
+}
+
+// LOGOUT
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>

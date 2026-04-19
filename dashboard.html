@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo-Valk - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="navbar">
+    <div><b>Todo-Valk</b></div>
+    <div>
+        <a href="account.html">Compte</a>
+        <a href="login.html" onclick="logout()">Déconnexion</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <h2>Mes tâches 📋</h2>
+
+    <div class="card">
+
+        <input type="text" id="taskInput" placeholder="Nouvelle tâche...">
+        <button onclick="addTask()">Ajouter</button>
+
+        <div id="taskList"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+const token = localStorage.getItem("token");
+
+// si pas connecté
+if (!token) {
+    window.location.href = "login.html";
+}
+
+// CHARGER TÂCHES
+async function loadTasks() {
+    try {
+        const res = await fetch("https://todo-valk-api.onrender.com/api/tasks", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        const tasks = await res.json();
+
+        const container = document.getElementById("taskList");
+        container.innerHTML = "";
+
+        tasks.forEach(task => {
+            container.innerHTML += `
+                <div class="task">
+
+                    <div>
+                        <span style="text-decoration:${task.completed ? 'line-through' : 'none'}">
+                            ${task.text}
+                        </span>
+
+                        <small style="display:block; color:gray;">
+                            📅 Créé le : ${new Date(task.createdAt).toLocaleString()}
+                        </small>
+
+                        ${task.completedAt ? `
+                            <small style="display:block; color:green;">
+                                ✅ Terminé le : ${new Date(task.completedAt).toLocaleString()}
+                            </small>
+                        ` : ""}
+                    </div>
+
+                    <div>
+                        <input type="checkbox" ${task.completed ? "checked" : ""} 
+                        onchange="toggleTask('${task._id}')">
+
+                        <button onclick="deleteTask('${task._id}')">❌</button>
+                    </div>
+
+                </div>
+            `;
+        });
+
+    } catch (err) {
+        console.log("LOAD ERROR:", err);
+    }
+}
+
+
+// AJOUTER TÂCHE
+async function addTask() {
+    const text = document.getElementById("taskInput").value;
+
+    if (!text) return;
+
+    await fetch("http://localhost:5000/api/tasks", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({ text })
+    });
+
+    document.getElementById("taskInput").value = "";
+
+    loadTasks();
+}
+
+
+// TOGGLE DONE
+async function toggleTask(id) {
+    await fetch(`http://localhost:5000/api/tasks/${id}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    });
+
+    loadTasks();
+}
+
+
+// DELETE TASK
+async function deleteTask(id) {
+    await fetch(`http://localhost:5000/api/tasks/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    });
+
+    loadTasks();
+}
+
+
+// LOGOUT
+function logout() {
+    localStorage.removeItem("token");
+}
+
+loadTasks();
+
+</script>
+
+</body>
+</html>
