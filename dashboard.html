@@ -95,7 +95,7 @@ async function addTask() {
 
     if (!text) return;
 
-    await fetch("http://localhost:5000/api/tasks", {
+    await fetch("https://todo-valk-api.onrender.com/api/tasks", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -112,7 +112,7 @@ async function addTask() {
 
 // TOGGLE DONE
 async function toggleTask(id) {
-    await fetch(`http://localhost:5000/api/tasks/${id}`, {
+    await fetch(`https://todo-valk-api.onrender.com/api/tasks/${id}`, {
         method: "PUT",
         headers: {
             "Authorization": "Bearer " + token
@@ -125,7 +125,7 @@ async function toggleTask(id) {
 
 // DELETE TASK
 async function deleteTask(id) {
-    await fetch(`http://localhost:5000/api/tasks/${id}`, {
+    await fetch(`https://todo-valk-api.onrender.com/api/tasks/${id}`, {
         method: "DELETE",
         headers: {
             "Authorization": "Bearer " + token
